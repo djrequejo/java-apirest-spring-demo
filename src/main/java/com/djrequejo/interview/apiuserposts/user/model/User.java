@@ -1,4 +1,4 @@
-package com.djrequejo.interview.apiuserposts.model;
+package com.djrequejo.interview.apiuserposts.user.model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +15,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-@Entity(name = "userpost")
+import com.djrequejo.interview.apiuserposts.post.model.Post;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity(name = "users")
 public class User {
 
     @Id
@@ -33,8 +37,21 @@ public class User {
 
     private LocalDateTime lastModifiedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts;
+
+    public User() {
+
+    }
+    
+    public User(Long id, String cellphone, String name, String lastName, String password) {
+        this.id = id;
+        this.cellphone = cellphone;
+        this.name = name;
+        this.lastName = lastName;
+        this.password = password;
+    }
 
     @PrePersist
     protected void onCreate() {

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  apiuserpost:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    depends_on:
+      - h2database
+
+  h2database:
+    image: "openjdk:11-jre-slim"
+    command: java -jar /h2database/h2*.jar -webAllowOthers -tcpAllowOthers
+    volumes:
+      - "./h2database:/h2database"
+    ports:
+      - "8082:8082"

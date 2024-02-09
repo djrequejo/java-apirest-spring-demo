@@ -1,4 +1,4 @@
-package com.djrequejo.interview.apiuserposts.model;
+package com.djrequejo.interview.apiuserposts.post.model;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+
+import org.springframework.context.annotation.Lazy;
+
+import com.djrequejo.interview.apiuserposts.user.model.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 @Entity
@@ -27,7 +32,8 @@ public class Post {
     private LocalDateTime lastModifiedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     @PrePersist
@@ -38,6 +44,21 @@ public class Post {
     @PreUpdate
     protected void onUpdate() {
         lastModifiedAt = LocalDateTime.now();
+    }
+
+    public Post() {
+        
+    }
+
+    public Post(Long id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
+    public Post(Long id, String text, User user) {
+        this.id = id;
+        this.text = text;
+        this.user = user;
     }
 
     public Long getId() {
